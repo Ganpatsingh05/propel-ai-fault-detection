@@ -80,4 +80,4 @@ This command will:
 
 ## 🌐 Public Deployment
 - **Frontend App:** [https://propel-ai-fault-detection.vercel.app/](#deployment-placeholder)
-- **Backend API:** [https://placeholder-url.com/api/v1/health](#deployment-placeholder)
+- **Backend API:** [https://propel-ai-fault-detection.onrender.com/api/v1/health](#deployment-placeholder)
