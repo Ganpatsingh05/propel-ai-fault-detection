@@ -1,83 +1,328 @@
-# Propel AI — Fault Detection System
+# ⚡ Propel AI — Intelligent Fault Detection System
 
-![Screenshots Placeholder](https://drive.google.com/drive/folders/1IKvJqakHglnE3606jKiX9qBUOT7iDFzH?lfhs=2)
+An end-to-end AI-assisted fault detection platform for electrical distribution networks. The system ingests smart grid telemetry, filters noisy events, localizes faults (even with incomplete topology), generates incidents and tickets, and provides operators with a real-time control room dashboard.
 
-[![Demo Video](https://drive.google.com/drive/folders/1IKvJqakHglnE3606jKiX9qBUOT7iDFzH?lfhs=2)](#demo-placeholder)
-[![Live App](https://img.shields.io/badge/Live_App-Try_Now-blue?style=for-the-badge)](#deployment-placeholder)
+---
 
-## 📌 Project Overview
-The **Propel AI Fault Detection System** is an end-to-end telemetry ingestion, analysis, and visualization platform designed for modern electricity grid operations. It automatically processes smart meter and IoT telemetry, detects grid anomalies, determines probable fault locations (even with missing topological data), and manages operator workflow for dispatching repair crews.
+## 🚀 Live Demo
 
-## ⚠️ Problem Statement
-Electricity grids frequently suffer from unplanned outages caused by transformer failures, broken spans, or individual device malfunctions. Traditional grids rely on customers calling to report outages. Modern smart grids generate telemetry, but raw telemetry is noisy, prone to duplicates, and often lacks accurate network topology metadata. 
+### 🌐 Frontend
+https://propel-ai-fault-detection.vercel.app/
 
-Grid operators need a system that can:
+### ⚙️ Backend API
+https://propel-ai-fault-detection.onrender.com
 
-1. Ingest noisy IoT telemetry at scale.
-2. Filter out false positives (e.g., scheduled maintenance).
-3. Localize the exact point of failure on the grid.
-4. Present actionable, high-confidence intelligence to human dispatchers.
+### ❤️ Health Check
+https://propel-ai-fault-detection.onrender.com/api/v1/health
 
-## ✨ Features
-- **Real-Time Telemetry Pipeline:** Validates, deduplicates, and ingests telemetry data.
-- **Rule-Based Detection Engine:** Deterministic pipeline classifying faults as Span Faults, Transformer Faults, Feeder Faults, or isolated Device Failures.
-- **Resilient Localization:** Pinpoints exact topology when available, and estimates logical bounds when mapping data is missing.
-- **Confidence Scoring:** Algorithmic confidence scoring (0.0 to 1.0) based on neighbor agreement and data density.
-- **Operator Control Room:** A React-based UI providing high-density, real-time grid insights and a geographic map.
-- **Ticketing Workflow:** Strict state-machine enforcement (`open → in_progress → resolved → pending_verification → closed`).
-- **Fault Simulator:** Built-in simulation panel to inject realistic fault scenarios into the live pipeline.
+### 🎥 Demo Video
+<https://drive.google.com/drive/folders/1IKvJqakHglnE3606jKiX9qBUOT7iDFzH?lfhs=2>
 
-## 🛠 Tech Stack
-**Backend:**
-- **Runtime:** Node.js (v20) / Express.js
-- **Language:** TypeScript
-- **Database:** PostgreSQL (pg) — No ORM, parameterized raw SQL.
-- **Architecture:** Layered (Controllers, Services, Repositories).
+---
 
-**Frontend:**
-- **Framework:** Next.js (App Router, Client-Side SPA paradigm)
-- **Language:** TypeScript
-- **Styling:** TailwindCSS
-- **State Management:** React Query
-- **Mapping:** React-Leaflet + OpenStreetMap
+## 📸 Screenshots
 
-## 📂 Folder Structure
+### Dashboard
+
+![Dashboard](docs/images/dashboard.png)
+
+### Incident Details
+
+![Incident](docs/images/incident.png)
+
+### Fault Simulator
+
+![Simulator](docs/images/simulator.png)
+
+---
+
+# 📌 Problem Statement
+
+Modern electricity distribution networks generate continuous telemetry from smart monitoring devices. While this enables faster outage detection, it also introduces significant challenges:
+
+- Noisy and duplicate telemetry
+- Missing topology information
+- Scheduled maintenance causing false alarms
+- Difficulty distinguishing device failures from actual grid faults
+- Slow operator response due to poor visualization
+
+The objective of this project is to automatically analyze telemetry, accurately localize outages, suppress false positives, and provide operators with actionable information.
+
+---
+
+# 💡 Solution Overview
+
+The Propel AI Fault Detection System processes telemetry through a deterministic detection pipeline.
+
+- Validates incoming telemetry
+- Removes duplicate events
+- Filters scheduled maintenance
+- Classifies fault type
+- Localizes probable fault location
+- Calculates confidence score
+- Creates incidents and tickets
+- Visualizes everything in a real-time dashboard
+
+Unlike black-box AI systems, every decision is explainable and reproducible.
+
+---
+
+# ✨ Features
+
+| Feature | Status |
+|----------|--------|
+| Real-time Telemetry Ingestion | ✅ |
+| Duplicate Detection | ✅ |
+| Scheduled Outage Suppression | ✅ |
+| Span Fault Detection | ✅ |
+| Transformer Fault Detection | ✅ |
+| Feeder Fault Detection | ✅ |
+| Device Failure Detection | ✅ |
+| Fault Localization | ✅ |
+| Confidence Scoring | ✅ |
+| Incident Management | ✅ |
+| Ticket Workflow | ✅ |
+| Interactive Dashboard | ✅ |
+| Fault Simulator | ✅ |
+| Docker Deployment | ✅ |
+
+---
+
+# ⚙️ Detection Pipeline
+
 ```text
-.
-├── backend/
-│   ├── database/        # DB schema, constraints, indexes, and seed scripts
-│   ├── src/
-│   │   ├── algorithms/  # Pure TS logic (Detection, Classifier, Localization)
-│   │   ├── controllers/ # HTTP Request/Response handling
-│   │   ├── services/    # Business logic and workflow enforcement
-│   │   ├── database/    # SQL Repositories
-│   │   ├── simulator/   # Telemetry scenario generation
-│   │   └── routes/      # Express routing definitions
-│   └── Dockerfile
-├── frontend/
-│   ├── src/
-│   │   ├── app/         # Next.js Pages & global styles
-│   │   ├── components/  # Reusable UI components
-│   │   ├── lib/         # API clients and providers
-│   │   └── types/       # Shared TypeScript interfaces
-├── docker-compose.yml   # Local production deployment
-└── README.md
+Telemetry Device
+        │
+        ▼
+POST /telemetry
+        │
+        ▼
+Payload Validation
+        │
+        ▼
+Duplicate Detection
+        │
+        ▼
+Scheduled Outage Filter
+        │
+        ▼
+Fault Classification
+        │
+        ▼
+Fault Localization
+        │
+        ▼
+Confidence Scoring
+        │
+        ▼
+Incident Creation
+        │
+        ▼
+Ticket Creation
+        │
+        ▼
+Operator Dashboard
 ```
 
-## 🚀 How to Run Locally
+---
 
-Start the entire stack (Database, Backend API, and Frontend) with a single command:
+# 🧠 Supported Fault Types
+
+- ✅ Span Fault
+- ✅ Transformer Fault
+- ✅ Feeder Fault
+- ✅ Device Failure
+- ✅ Scheduled Outage
+- ✅ Power Restoration
+
+---
+
+# 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+
+Device --> Telemetry
+
+Telemetry --> Validation
+
+Validation --> Deduplication
+
+Deduplication --> OutageFilter
+
+OutageFilter --> Classifier
+
+Classifier --> Localization
+
+Localization --> Confidence
+
+Confidence --> Incident
+
+Incident --> Ticket
+
+Ticket --> Dashboard
+
+Dashboard --> Operator
+```
+
+---
+
+# 🛠️ Tech Stack
+
+## Backend
+
+- Node.js
+- Express.js
+- TypeScript
+- PostgreSQL
+- Raw SQL (No ORM)
+- Docker
+
+## Frontend
+
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+- React Query
+- React Leaflet
+- Framer Motion
+
+## Database
+
+- PostgreSQL
+- Indexed relational schema
+- Constraints
+- Seed data
+- Incident & telemetry history
+
+---
+
+# 📂 Project Structure
+
+```text
+.
+├── backend
+│   ├── database
+│   ├── src
+│   │   ├── algorithms
+│   │   ├── controllers
+│   │   ├── database
+│   │   ├── services
+│   │   ├── simulator
+│   │   ├── routes
+│   │   └── types
+│   └── Dockerfile
+│
+├── frontend
+│   ├── src
+│   │   ├── app
+│   │   ├── components
+│   │   ├── lib
+│   │   └── types
+│   └── Dockerfile
+│
+├── docker-compose.yml
+├── README.md
+├── ARCHITECTURE.md
+├── DEPLOYMENT.md
+├── DECISIONS.md
+└── AI-WORKFLOW.md
+```
+
+---
+
+# 🚀 Running Locally
+
+Clone the repository.
+
+```bash
+git clone https://github.com/Ganpatsingh05/propel-ai-fault-detection.git
+
+cd propel-ai-fault-detection
+```
+
+Start the complete production stack.
+
 ```bash
 docker compose up --build
 ```
 
-This command will:
-1. Start PostgreSQL on port `5432` and automatically seed the database.
-2. Build and start the Node.js backend on `http://localhost:5000`.
-3. Build and start the Next.js frontend on `http://localhost:3000`.
+This automatically starts:
 
-*Note: The frontend will automatically wait for the backend to pass its health checks before starting.*
+- PostgreSQL Database
+- Express Backend
+- Next.js Frontend
 
-## 🌐 Public Deployment
-- **Frontend App:** [https://propel-ai-fault-detection.vercel.app/](#deployment-placeholder)
-- **Backend API:** [https://propel-ai-fault-detection.onrender.com/api/v1/health](#deployment-placeholder)
+No additional setup is required.
+
+---
+
+# 🌍 Deployment
+
+## Frontend
+
+Hosted on Vercel.
+
+https://propel-ai-fault-detection.vercel.app/
+
+## Backend
+
+Hosted on Render.
+
+https://propel-ai-fault-detection.onrender.com
+
+---
+
+# 📡 REST API
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | /api/v1/health | Health Check |
+| POST | /api/v1/telemetry | Process Telemetry |
+| GET | /api/v1/dashboard | Dashboard Statistics |
+| GET | /api/v1/incidents | Incident List |
+| GET | /api/v1/incidents/:id | Incident Details |
+| GET | /api/v1/tickets | Ticket Queue |
+| PATCH | /api/v1/tickets/:id | Update Ticket Workflow |
+| POST | /api/v1/simulator/span | Simulate Span Fault |
+| POST | /api/v1/simulator/transformer | Simulate Transformer Fault |
+| POST | /api/v1/simulator/feeder | Simulate Feeder Fault |
+| POST | /api/v1/simulator/device | Simulate Device Failure |
+| POST | /api/v1/simulator/outage | Simulate Scheduled Outage |
+| POST | /api/v1/simulator/restore | Simulate Power Restoration |
+
+---
+
+# 📊 Key Design Decisions
+
+- Deterministic fault localization instead of LLM-based reasoning
+- Raw SQL instead of an ORM for complete query control
+- Layered architecture (Controllers → Services → Repositories)
+- Pure functional detection algorithms
+- Confidence scoring based on transparent rules
+- Fault simulator built using the production telemetry pipeline
+- Explainable incident generation through stored detection results
+
+---
+
+# 📚 Documentation
+
+Detailed documentation is included in the repository.
+
+- 📘 ARCHITECTURE.md
+- 🚀 DEPLOYMENT.md
+- ⚖️ DECISIONS.md
+- 🤖 AI-WORKFLOW.md
+
+---
+
+# 👨‍💻 Developed For
+
+**Propel AI Product Engineer Assignment (2026)**
+
+This repository was developed as part of the Propel AI hiring assignment, demonstrating fault localization, telemetry processing, incident management, product thinking, and full-stack engineering.
+
+---
+
+## ⭐ If you found this project interesting, feel free to star the repository.
